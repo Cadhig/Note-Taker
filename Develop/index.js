@@ -4,6 +4,8 @@ const port = 3000
 const db = require('./db/db.json')
 const fs = require('fs')
 const path = require('path')
+const jsonFile = './db/db.json'
+const { v4: uuidv4 } = require('uuid')
 
 app.use(express.json())
 app.use(express.static(path.join(__dirname, 'public')))
@@ -21,10 +23,20 @@ app.get('/api/notes', (req, res) => {
 })
 
 app.post('/api/notes', (req, res) => {
-    let title = req.body.title
-    let text = req.body.text
-    console.log(title)
-    res.send(title)
+    console.log(jsonFile)
+    let jsonBody = req.body
+    jsonBody.id = uuidv4()
+    const readFile = fs.readFile(jsonFile, 'utf8', (err, data) => {
+        const parsedData = JSON.parse(data)
+        parsedData.push(jsonBody)
+        fs.writeFileSync(jsonFile, JSON.stringify(parsedData))
+        console.log(data)
+        console.error(error)
+
+    })
+    console.log(readFile)
+    // fs.appendFileSync(jsonFile, JSON.stringify(jsonBody))
+    res.send(jsonBody)
 })
 app.listen(port, () => {
     console.log(`Server listening on port: ${port}`)
