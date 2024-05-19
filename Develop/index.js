@@ -42,8 +42,7 @@ app.post('/api/notes', (req, res) => {
 
 app.delete('/api/notes/:id', (req, res) => {
     const id = req.params.id * 1
-    const noteToDelete = db.find(el => el.id === id)
-    const index = db.indexOf(noteToDelete)
+    const index = db.findIndex(note => note.id === id)
     db.splice(index, 1)
     fs.writeFileSync(jsonFile, JSON.stringify(db))
     res.send(db)
