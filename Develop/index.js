@@ -26,17 +26,27 @@ app.post('/api/notes', (req, res) => {
     console.log(jsonFile)
     let jsonBody = req.body
     jsonBody.id = uuidv4()
+    db.push(jsonBody)
     const readFile = fs.readFile(jsonFile, 'utf8', (err, data) => {
         const parsedData = JSON.parse(data)
         parsedData.push(jsonBody)
         fs.writeFileSync(jsonFile, JSON.stringify(parsedData))
         console.log(data)
-        console.error(error)
+        console.error(err)
 
     })
     console.log(readFile)
     // fs.appendFileSync(jsonFile, JSON.stringify(jsonBody))
     res.send(jsonBody)
+})
+
+app.delete('/api/notes/:id', (req, res) => {
+    const id = req.params.id * 1
+    const noteToDelete = db.find(el => el.id === id)
+    const index = db.indexOf(noteToDelete)
+    db.splice(index, 1)
+    fs.writeFileSync(jsonFile, JSON.stringify(db))
+    res.send(db)
 })
 app.listen(port, () => {
     console.log(`Server listening on port: ${port}`)
