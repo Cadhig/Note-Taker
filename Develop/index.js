@@ -20,24 +20,29 @@ app.get('/notes', (req, res) => {
 
 
 app.get('/api/notes', (req, res) => {
-    res.send(db)
+    res.json(db)
 })
 app.post('/api/notes', (req, res) => {
-    console.log(jsonFile)
-    let jsonBody = req.body
-    jsonBody.id = uuidv4()
-    db.push(jsonBody)
-    const readFile = fs.readFile(jsonFile, 'utf8', (err, data) => {
-        const parsedData = JSON.parse(data)
-        parsedData.push(jsonBody)
-        fs.writeFileSync(jsonFile, JSON.stringify(parsedData))
-        console.log(data)
-        console.error(err)
+    try {
+        console.log(jsonFile)
+        let jsonBody = req.body
+        jsonBody.id = uuidv4()
+        db.push(jsonBody)
+        const readFile = fs.readFile(jsonFile, 'utf8', (err, data) => {
+            const parsedData = JSON.parse(data)
+            parsedData.push(jsonBody)
+            fs.writeFileSync(jsonFile, JSON.stringify(parsedData))
+            console.log(data)
+            console.error(err)
 
-    })
-    console.log(readFile)
-    // fs.appendFileSync(jsonFile, JSON.stringify(jsonBody))
-    res.send(jsonBody)
+        })
+        console.log(readFile)
+        // fs.appendFileSync(jsonFile, JSON.stringify(jsonBody))
+        res.send(jsonBody)
+    }
+    catch (e) {
+        console.error(e)
+    }
 })
 
 app.delete('/api/notes/:id', (req, res) => {
