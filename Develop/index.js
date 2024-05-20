@@ -18,10 +18,10 @@ app.get('/notes', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'notes.html'))
 })
 
+
 app.get('/api/notes', (req, res) => {
     res.send(db)
 })
-
 app.post('/api/notes', (req, res) => {
     console.log(jsonFile)
     let jsonBody = req.body
@@ -41,12 +41,13 @@ app.post('/api/notes', (req, res) => {
 })
 
 app.delete('/api/notes/:id', (req, res) => {
-    const id = req.params.id * 1
+    const id = req.params.id
     const index = db.findIndex(note => note.id === id)
     db.splice(index, 1)
     fs.writeFileSync(jsonFile, JSON.stringify(db))
     res.send(db)
 })
+
 app.listen(port, () => {
     console.log(`Server listening on port: ${port}`)
 })
